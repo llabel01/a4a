@@ -1,0 +1,185 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Quick Pick</title>
+
+    <style>
+        body {background-color: #abe3ff;}
+
+        img {
+            border-style: border-box;
+            height: 120px;
+            padding: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        section {
+            padding: 10px;
+            border-style: solid;
+            border-width: 3px;
+            border-color: #008142;
+            text-align: center;
+            margin-top: 15px;           
+        }
+    </style>
+
+    <script language="javascript">
+        window.onload = init;
+
+        function init() {
+            document.getElementById("submitBtn").addEventListener("click", 
+                function(){afterSubmit()});
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <img src="LuckyForLife.gif" alt="Lucky for Life">
+
+<script language="javascript">
+
+    // global variables
+    var winningNums = new Array();
+    var luckyBallNum;
+
+    // calculate and report the winning numbers
+    document.write("Today's Winning Numbers: ");
+    var i = 0;
+    while (i < 5) {
+        var number = RandomInt(48);
+
+        // do not allow duplicates
+        if (!winningNums.includes(number)) {
+            winningNums.push(number);
+            document.write(winningNums[i] + " ");
+            i++;
+        }
+    }
+
+    // calculate and report the lucy ball
+    luckyBallNum = RandomInt(18);
+    document.write("<br>Lucky Ball: " + luckyBallNum);
+
+    // sort winning numbers
+    winningNums.sort(function(n, m){return n-m});
+    document.write("<br>Sorted: ");
+    for (i = 0; i < 5; i++) {
+        document.write(winningNums[i] + " ");
+    }
+
+    function afterSubmit() {
+        // get user numbers / lucky ball
+        var unparsedUserNumbers = getUserNumbers();
+        var userNumbers = unparsedUserNumbers.split(" ");
+        var userLuckyBallNum = getUserLuckyBall();
+
+        // calculate matches
+        var numMatches = calculateMatches(userNumbers);
+
+        // determine and report payout
+        var payout = determinePayout(numMatches, (userLuckyBallNum == luckyBallNum));
+
+        alert("YOUR PAYOUT: " + payout);
+    }
+
+    function RandomInt(max) {
+        return Math.floor(Math.random() * max + 1);
+    }
+
+    function calculateMatches(userNumbers) {
+        var numMatches = 0;
+        for (i = 0; i < 5; i++) {
+            for (j = 0; j < 5; j++)
+                if (winningNums[i] == userNumbers[j]) {
+                    numMatches++;
+                    break;
+                }
+        }
+        return numMatches;
+    }
+
+    function getUserNumbers() {
+        var userNumbers = document.getElementById("userNumbersBox").value;
+        return userNumbers;
+    }
+
+    function getUserLuckyBall() {
+        var userLuckyBall = document.getElementById("userLuckyBallBox").value;
+        return userLuckyBall;
+    }
+
+    function determinePayout(numMatch, LuckyBallMatch) {
+        var payout;
+        switch (numMatch) {
+            case 5:
+                if (LuckyBallMatch) {
+                    payout = "$7,000 a WEEK for LIFE!";
+                }
+                else {
+                    payout = "$25,000 a YEAR for LIFE!";
+                }
+                break;
+            case 4:
+                if (LuckyBallMatch) {
+                    payout = "$5000";
+                }
+                else {
+                    payout = "$200";
+                }
+                break;
+            case 3:
+                if (LuckyBallMatch) {
+                    payout = "$150";
+                }
+                else {
+                    payout = "$20";
+                }
+                break;
+            case 2:
+                if (LuckyBallMatch) {
+                    payout = "$25";
+                }
+                else {
+                    payout = "$3";
+                }
+                break;
+            case 1:
+                if (LuckyBallMatch) {
+                    payout = "$6";
+                }
+                else {
+                    payout = "$0";
+                }
+                break;
+            default:
+                if (LuckyBallMatch) {
+                    payout = "$4";
+                }
+                else {
+                    payout = "$0";
+                }
+            }
+            return payout;
+        }
+
+</script>
+
+<section>
+    <h3>PLAY NOW:</h3>
+    <form>
+        Enter 5 Numbers, Separated By Spaces: <br>
+        <input type="text" id="userNumbersBox"> <br>
+        Enter a Number for the Lucky Ball: <br>
+        <input type="number" id="userLuckyBallBox" min="1" max="18"> 
+        <br>
+        <input id="submitBtn" type="submit" value="Submit">
+    </form>
+</section>
+
+</body>
+</html>
+
